@@ -5,12 +5,19 @@ def mongo_db_connect(clientIP):
     # Faz a conexão no MongoDB
     try:
         conn=pymongo.MongoClient(clientIP,27017)
-	print conn
         conn.server_info()
-        print "Conectado!!!!"
-        conn.database_names()	
-    except pymongo.errors.ConnectionFailure, e:
-        print "Não foi possível conectar no MongoDB: %s" % e 
+        print("+>> Connected!")
+    except pymongo.errors.ConnectionFailure as e:
+        print("!>> Não foi possível conectar no MongoDB: %s" % e)
+        return
+
+    try:
+        print("+>> Getting databases names")
+        cols = conn.database_names()
+        for c in cols:
+            print("->> %s" % c)
+    except Exception as e:
+        print("!>> MongoDB: %s" % e)
 
 def main(argv):
 
@@ -25,15 +32,15 @@ def main(argv):
 
     # scaneia
     for line in my_list:
-        print line
-        print '----------------------------------------'
+        print(line)
+        print('----------------------------------------')
 	
         try:
             mongo_db_connect(line)
         except:
-            print 'Conexao Terminada'
+            print('Connection Error')
 
-        print '----------------------------------------'
+        print('----------------------------------------')
 
 
 if __name__ == "__main__":
